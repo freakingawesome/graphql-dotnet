@@ -251,8 +251,8 @@ namespace GraphQL.Utilities
                     x.Name,
                     Type = ResolveName(x.ResolvedType),
                     Args = PrintArgs(x),
-                    Description = _options.IncludeDescriptions ? PrintDescription(type.Description, "  ") : string.Empty,
-                    Deprecation = _options.IncludeDeprecationReasons ? PrintDeprecation(type.DeprecationReason) : string.Empty,
+                    Description = PrintDescription(x.Description, "  "),
+                    Deprecation = PrintDeprecation(x.DeprecationReason),
                 }).ToList();
 
             return string.Join(Environment.NewLine, fields?.Select(
@@ -369,7 +369,7 @@ namespace GraphQL.Utilities
 
         public string PrintDescription(string description, string indentation = "", bool firstInBlock = true)
         {
-            if (string.IsNullOrWhiteSpace(description)) return "";
+            if (!_options.IncludeDescriptions || string.IsNullOrWhiteSpace(description)) return "";
 
             indentation = indentation ?? "";
 
@@ -403,7 +403,7 @@ namespace GraphQL.Utilities
 
         public string PrintDeprecation(string reason)
         {
-            if (string.IsNullOrWhiteSpace(reason))
+            if (!_options.IncludeDeprecationReasons || string.IsNullOrWhiteSpace(reason))
             {
                 return string.Empty;
             }
